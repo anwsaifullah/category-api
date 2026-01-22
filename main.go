@@ -68,8 +68,18 @@ func categoryByIdHandler(w http.ResponseWriter, r *http.Request) {
 				w.WriteHeader(http.StatusCreated)
 				json.NewEncoder(w).Encode(updatedCategory)
 			case "GET":
+				json.NewEncoder(w).Encode(cat)
 			case "DELETE":
+				categories = append(categories[:i], categories[i+1:]...)
+				json.NewEncoder(w).Encode(map[string]string{
+					"message": "Category deleted successfully",
+				})
+			default:
+				http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 			}
+			return
 		}
 	}
+
+	http.Error(w, "Category not found", http.StatusNotFound)
 }
